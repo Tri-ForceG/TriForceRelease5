@@ -43,7 +43,7 @@ public class HardState implements Screen, InputProcessor {
         Skin skin = tbMenu.getSkin();//calls skin
         TbBack = new TbText("Back", skin);
         TbBack.setPosition(0, 0);
-        textureAtlas = new TextureAtlas(Gdx.files.internal("Megaman.pack"));
+        textureAtlas = new TextureAtlas(Gdx.files.internal("Bird.pack"));
         animation = new Animation(1f/6f, textureAtlas.getRegions());
         stage.addActor(TbBack);
         Gdx.input.setInputProcessor(stage);

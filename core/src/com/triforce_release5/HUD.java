@@ -93,7 +93,7 @@ public class HUD {
         lblTimer.setText(Integer.toString(nTimer) + "s");
         if (Gdx.input.justTouched()) {
             nCurrentHighScore += 1;
-            SoundFiles.megamanSound.play(); //When you click the screen, it plays the "hitmarker" sound.
+            SoundFiles.FlapSound.play(); //When you click the screen, it plays the "hitmarker" sound.
         }
         if (nCurrentHighScore > nHighScore) { //If your current score is higher than the saved high score, that becomes the new high score and gets saved.
             Score.putInteger("High Score", nCurrentHighScore);
