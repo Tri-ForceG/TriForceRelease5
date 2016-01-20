@@ -87,19 +87,19 @@ public class EasyState implements Screen, InputProcessor{
     }
 
     private void spawnTopTube() {
-        Sprite sprTtube = new Sprite(txTopTube);
-        sprTtube.setX(750);
-        sprTtube.setY(MathUtils.random(400 - 200) + 250);
+        Sprite sprTopTube = new Sprite(txTopTube);
+        sprTopTube.setX(750);
+        sprTopTube.setY(MathUtils.random(400 - 200) + 250);
         arsprTopTube.add(sprTopTube);
-        fTopTubeY = sprTtube.getY() - 150;
+        fTopTubeY = sprTopTube.getY() - 150;
         lMoveTime = TimeUtils.nanoTime();
     }
 
     private void spawnBottTube() {
-        Sprite sprBtube = new Sprite(txBottTube);
-        sprBtube.setX(750);
-        sprBtube.setY(fTopTubeY - 300);
-        arsprBottTube.add(sprBtube);
+        Sprite sprBottTube = new Sprite(txBottTube);
+        sprBottTube.setX(750);
+        sprBottTube.setY(fTopTubeY - 300);
+        arsprBottTube.add(sprBottTube);
         lMoveTime2 = TimeUtils.nanoTime();
     }
 
@@ -113,25 +113,25 @@ public class EasyState implements Screen, InputProcessor{
         fElapsedTime += Gdx.graphics.getDeltaTime();
         sbBatch.setProjectionMatrix(camera.combined);
         sbBatch.begin();
-        for (Sprite sprTtube : arsprTopTube) {
-            sbBatch.draw(sprTtube, sprTtube.getX(), sprTtube.getY());
+        for (Sprite sprTopTube : arsprTopTube) {
+            sbBatch.draw(sprTopTube, sprTopTube.getX(), sprTopTube.getY());
         }
-        for (Sprite sprBtube : arsprBottTube) {
-            sbBatch.draw(sprBtube, sprBtube.getX(), sprBtube.getY());
+        for (Sprite sprBottTube : arsprBottTube) {
+            sbBatch.draw(sprBottTube, sprBottTube.getX(), sprBottTube.getY());
         }
         sbBatch.end();
         if (TimeUtils.nanoTime() - lMoveTime > 100000000 * nSpawnTime) spawnTopTube();
             Iterator<Sprite> iter = arsprTopTube.iterator();
         while (iter.hasNext()) {
-            Sprite sprTtube = iter.next();
-            sprTtube.setX(sprTtube.getX() - (200) * Gdx.graphics.getDeltaTime());
+            Sprite sprTopTube = iter.next();
+            sprTopTube.setX(sprTopTube.getX() - (200) * Gdx.graphics.getDeltaTime());
 
         }
         if (TimeUtils.nanoTime() - lMoveTime2 > 100000000 * nSpawnTime) spawnBottTube();
         Iterator<Sprite> iters = arsprBottTube.iterator();
         while (iters.hasNext()) {
-            Sprite sprBtube = iters.next();
-            sprBtube.setX(sprBtube.getX() - (200) * Gdx.graphics.getDeltaTime());
+            Sprite sprBottTube = iters.next();
+            sprBottTube.setX(sprBottTube.getX() - (200) * Gdx.graphics.getDeltaTime());
         }
 
         sbBatch.begin();
