@@ -69,7 +69,7 @@ public class EasyState implements Screen, InputProcessor{
         sprBottTube = new Sprite(txBottTube);
         //Creating sprite and camera
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, 800, 800);
+        camera.setToOrtho(false, 800, 480);
         arsprTopTube = new Array<Sprite>();
         arsprBottTube = new Array<Sprite>();
         spawnTopTube();
@@ -88,7 +88,7 @@ public class EasyState implements Screen, InputProcessor{
 
     private void spawnTopTube() {
         Sprite sprTtube = new Sprite(txTopTube);
-        sprTtube.setX(800);
+        sprTtube.setX(750);
         sprTtube.setY(MathUtils.random(400 - 200) + 250);
         arsprTopTube.add(sprTopTube);
         fTopTubeY = sprTtube.getY() - 150;
@@ -121,7 +121,7 @@ public class EasyState implements Screen, InputProcessor{
         }
         sbBatch.end();
         if (TimeUtils.nanoTime() - lMoveTime > 100000000 * nSpawnTime) spawnTopTube();
-        Iterator<Sprite> iter = arsprTopTube.iterator();
+            Iterator<Sprite> iter = arsprTopTube.iterator();
         while (iter.hasNext()) {
             Sprite sprTtube = iter.next();
             sprTtube.setX(sprTtube.getX() - (200) * Gdx.graphics.getDeltaTime());

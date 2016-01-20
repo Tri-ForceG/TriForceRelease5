@@ -10,7 +10,7 @@ public class DesktopLauncher {
 		new LwjglApplication(new TriForceRelease5(), config);
 		config.height = 600; //Set the height, width, and title of the screen. Disable the option to make the screen larger.
 		config.width = 400;
-		config.title = "TriForce Release 4!";
+		config.title = "TriForce Release 5!";
 		config.resizable = false;
 	}
 }
