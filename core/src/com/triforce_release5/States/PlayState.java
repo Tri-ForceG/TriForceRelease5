@@ -66,9 +66,6 @@ public class PlayState implements Screen, InputProcessor {
         stage.draw();
         batch.begin();
         batch.end();
-        //if(Gdx.input.justTouched()){ //When you click the screen, it plays the "hitmarker" sound.
-            //SoundFiles.megamanSound.play();
-        //}
         if(TbEasy.isPressed()){
             triForceRelease5.currentState = TriForceRelease5.GameState.EASY;
             triForceRelease5.updateState();
