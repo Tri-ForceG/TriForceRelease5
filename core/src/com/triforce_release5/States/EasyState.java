@@ -29,9 +29,10 @@ import java.util.Iterator;
 public class EasyState implements Screen, InputProcessor{
     TriForceRelease5 triForceRelease5;
 
-    private TextureAtlas textureAtlas; //This is for the animation of the character.
-    private Animation animation;
-    private float fElapsedTime = 0f;
+    private TextureAtlas txAtlasBird; //This is for the BirdAnimation of the character.
+    private Animation BirdAnimation;
+    private float fElapsedTime = 0f, fBirdY = 180, fBirdX = 150;
+    private Integer nGravity = 1, nClick = 50;
 
     SpriteBatch sbBatch;
     Stage stage;
@@ -59,8 +60,8 @@ public class EasyState implements Screen, InputProcessor{
         Skin skin = tbMenu.getSkin();//calls skin
         TbBack = new TbText("Back", skin);
         TbBack.setPosition(0, 0);
-        textureAtlas = new TextureAtlas(Gdx.files.internal("Bird.pack"));
-        animation = new Animation(1f/6f, textureAtlas.getRegions());
+        txAtlasBird = new TextureAtlas(Gdx.files.internal("Bird.pack"));
+        BirdAnimation = new Animation(1f/6f, txAtlasBird.getRegions());
 
         txTopTube = new Texture(Gdx.files.internal("TopTube.png")); //Tube Stuff.
         txBottTube = new Texture(Gdx.files.internal("BottomTube.png"));
@@ -103,6 +104,17 @@ public class EasyState implements Screen, InputProcessor{
         lMoveTime2 = TimeUtils.nanoTime();
     }
 
+    private void updateBird(){
+        fBirdY -= nGravity;
+        sbBatch.draw(BirdAnimation.getKeyFrame(fElapsedTime, true), fBirdX, fBirdY);
+        if(fBirdY == 0){
+            fBirdY+=1;
+        }
+        if(Gdx.input.justTouched()){
+            fBirdY += nClick;
+        }
+    }
+
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(1, 1, 0, 1); //Yellow background.
@@ -135,7 +147,8 @@ public class EasyState implements Screen, InputProcessor{
         }
 
         sbBatch.begin();
-        sbBatch.draw(animation.getKeyFrame(fElapsedTime, true), 150, 180);
+        //sbBatch.draw(BirdAnimation.getKeyFrame(fElapsedTime, true), 150, 180);
+        updateBird();
         sbBatch.end();
         triForceRelease5.hud.update();
         if (TbBack.isPressed()) {
@@ -170,7 +183,7 @@ public class EasyState implements Screen, InputProcessor{
     @Override
     public void dispose() {
         sbBatch.dispose();
-        textureAtlas.dispose();
+        txAtlasBird.dispose();
 
     }
 
