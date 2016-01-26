@@ -33,6 +33,7 @@ public class EasyState implements Screen, InputProcessor{
     private Animation BirdAnimation;
     private float fElapsedTime = 0f, fBirdY = 180, fBirdX = 150;
     private Integer nGravity = 1, nClick = 50;
+    private Sprite sprBird;
 
     SpriteBatch sbBatch;
     Stage stage;
@@ -106,7 +107,10 @@ public class EasyState implements Screen, InputProcessor{
 
     private void updateBird(){
         fBirdY -= nGravity;
-        sbBatch.draw(BirdAnimation.getKeyFrame(fElapsedTime, true), fBirdX, fBirdY);
+        sprBird = new Sprite(BirdAnimation.getKeyFrame(fElapsedTime, true));
+        sprBird.setX(fBirdX);
+        sprBird.setY(fBirdY);
+        sprBird.draw(sbBatch);
         if(fBirdY == 0){
             fBirdY+=1;
         }
@@ -114,7 +118,7 @@ public class EasyState implements Screen, InputProcessor{
             fBirdY += nClick;
         }
     }
-
+    
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(1, 1, 0, 1); //Yellow background.
@@ -125,11 +129,18 @@ public class EasyState implements Screen, InputProcessor{
         fElapsedTime += Gdx.graphics.getDeltaTime();
         sbBatch.setProjectionMatrix(camera.combined);
         sbBatch.begin();
+        updateBird();
         for (Sprite sprTopTube : arsprTopTube) {
             sbBatch.draw(sprTopTube, sprTopTube.getX(), sprTopTube.getY());
+            if(sprBird.getBoundingRectangle().overlaps(sprTopTube.getBoundingRectangle())) {
+                System.out.println("Hit Top");
+            }
         }
         for (Sprite sprBottTube : arsprBottTube) {
             sbBatch.draw(sprBottTube, sprBottTube.getX(), sprBottTube.getY());
+            if(sprBird.getBoundingRectangle().overlaps(sprBottTube.getBoundingRectangle())) {
+                System.out.println("Hit Bott");
+            }
         }
         sbBatch.end();
         if (TimeUtils.nanoTime() - lMoveTime > 100000000 * nSpawnTime) spawnTopTube();
@@ -147,8 +158,6 @@ public class EasyState implements Screen, InputProcessor{
         }
 
         sbBatch.begin();
-        //sbBatch.draw(BirdAnimation.getKeyFrame(fElapsedTime, true), 150, 180);
-        updateBird();
         sbBatch.end();
         triForceRelease5.hud.update();
         if (TbBack.isPressed()) {
