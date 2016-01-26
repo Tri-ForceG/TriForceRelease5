@@ -31,9 +31,10 @@ public class EasyState implements Screen, InputProcessor{
 
     private TextureAtlas txAtlasBird; //This is for the BirdAnimation of the character.
     private Animation BirdAnimation;
-    private float fElapsedTime = 0f, fBirdY = 180, fBirdX = 150;
+    private float fElapsedTime = 0f, fBirdY = 180, fBirdX = 150, fOldX, fOldY;
     private Integer nGravity = 1, nClick = 50;
     private Sprite sprBird;
+    boolean bHit;
 
     SpriteBatch sbBatch;
     Stage stage;
@@ -63,10 +64,11 @@ public class EasyState implements Screen, InputProcessor{
         TbBack.setPosition(0, 0);
         txAtlasBird = new TextureAtlas(Gdx.files.internal("Bird.pack"));
         BirdAnimation = new Animation(1f/6f, txAtlasBird.getRegions());
+        bHit = false;
 
         txTopTube = new Texture(Gdx.files.internal("TopTube.png")); //Tube Stuff.
         txBottTube = new Texture(Gdx.files.internal("BottomTube.png"));
-        nSpawnTime = 100;
+        nSpawnTime = 150;
         sprTopTube = new Sprite(txTopTube);
         sprBottTube = new Sprite(txBottTube);
         //Creating sprite and camera
@@ -93,7 +95,7 @@ public class EasyState implements Screen, InputProcessor{
         sprTopTube.setX(750);
         sprTopTube.setY(MathUtils.random(400 - 200) + 250);
         arsprTopTube.add(sprTopTube);
-        fTopTubeY = sprTopTube.getY() - 150;
+        fTopTubeY = sprTopTube.getY() - 200;
         lMoveTime = TimeUtils.nanoTime();
     }
 
@@ -106,17 +108,32 @@ public class EasyState implements Screen, InputProcessor{
     }
 
     private void updateBird(){
-        fBirdY -= nGravity;
         sprBird = new Sprite(BirdAnimation.getKeyFrame(fElapsedTime, true));
-        sprBird.setX(fBirdX);
-        sprBird.setY(fBirdY);
-        sprBird.draw(sbBatch);
-        if(fBirdY == 0){
-            fBirdY+=1;
+        if(bHit == false) {
+            fBirdY -= nGravity;
+            sprBird.setX(fBirdX);
+            sprBird.setY(fBirdY);
+        }else{
+            sprBird.setX(fOldX);
+            sprBird.setY(fOldY -= nGravity);
+            if(sprBird.getY() == 0){
+                sprBird.setY(fOldY++);
+                nGravity=0;
+            }
         }
+        sprBird.draw(sbBatch);
+        fOldX = sprBird.getX();
+        fOldY = sprBird.getY();
         if(Gdx.input.justTouched()){
             fBirdY += nClick;
         }
+    }
+
+    private void ResetBird(){
+        bHit = false;
+        fBirdX = 150;
+        fBirdY = 180;
+        nGravity = 1;
     }
     
     @Override
@@ -134,27 +151,34 @@ public class EasyState implements Screen, InputProcessor{
             sbBatch.draw(sprTopTube, sprTopTube.getX(), sprTopTube.getY());
             if(sprBird.getBoundingRectangle().overlaps(sprTopTube.getBoundingRectangle())) {
                 System.out.println("Hit Top");
+                bHit = true;
             }
         }
         for (Sprite sprBottTube : arsprBottTube) {
             sbBatch.draw(sprBottTube, sprBottTube.getX(), sprBottTube.getY());
             if(sprBird.getBoundingRectangle().overlaps(sprBottTube.getBoundingRectangle())) {
                 System.out.println("Hit Bott");
+                bHit = true;
             }
         }
         sbBatch.end();
-        if (TimeUtils.nanoTime() - lMoveTime > 100000000 * nSpawnTime) spawnTopTube();
+        if(bHit == false) {
+            if (TimeUtils.nanoTime() - lMoveTime > 100000000 * nSpawnTime) spawnTopTube();
             Iterator<Sprite> iter = arsprTopTube.iterator();
-        while (iter.hasNext()) {
-            Sprite sprTopTube = iter.next();
-            sprTopTube.setX(sprTopTube.getX() - (200) * Gdx.graphics.getDeltaTime());
-
+            while (iter.hasNext()) {
+                Sprite sprTopTube = iter.next();
+                sprTopTube.setX(sprTopTube.getX() - (200) * Gdx.graphics.getDeltaTime());
+            }
+        }else{
         }
-        if (TimeUtils.nanoTime() - lMoveTime2 > 100000000 * nSpawnTime) spawnBottTube();
-        Iterator<Sprite> iters = arsprBottTube.iterator();
-        while (iters.hasNext()) {
-            Sprite sprBottTube = iters.next();
-            sprBottTube.setX(sprBottTube.getX() - (200) * Gdx.graphics.getDeltaTime());
+        if(bHit == false) {
+            if (TimeUtils.nanoTime() - lMoveTime2 > 100000000 * nSpawnTime) spawnBottTube();
+            Iterator<Sprite> iters = arsprBottTube.iterator();
+            while (iters.hasNext()) {
+                Sprite sprBottTube = iters.next();
+                sprBottTube.setX(sprBottTube.getX() - (200) * Gdx.graphics.getDeltaTime());
+            }
+        }else{
         }
 
         sbBatch.begin();
@@ -164,7 +188,7 @@ public class EasyState implements Screen, InputProcessor{
             triForceRelease5.currentState = TriForceRelease5.GameState.PLAY;
             triForceRelease5.updateState();
             triForceRelease5.hud.reset();
-
+            ResetBird();
         }
     }
 
